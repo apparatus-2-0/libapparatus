@@ -1,6 +1,6 @@
-# libls
+# libapparatus
 
-library containing functions for the lizardscanner project
+library containing functions for the apparatus project
 
 
 ## helper
@@ -16,7 +16,7 @@ arguments
 - time: show timestamps
 
 ```
->>> from libls.logger import getLogger
+>>> from libapparatus.logger import getLogger
 >>> l = getLogger(name="someName", debug=True, time=False)
 >>> l.info("some info")
 [  someName:I:       <module>] some info

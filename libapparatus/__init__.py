@@ -1,4 +1,4 @@
-"""Initialization file for the libls package."""
+"""Initialization file for the libapparatus package."""
 from importlib.metadata import version, PackageNotFoundError
 
 try:

@@ -1,12 +1,12 @@
 """Test functions from the libls package."""
 import pytest
-import libls
+import libapparatus
 
 
 @pytest.fixture(name="logger")
 def fixture_logger():
     """Fixture to initialize the logger."""
-    lg = libls.get_logger("test_logger", "DEBUG")
+    lg = libapparatus.get_logger("test_logger", "DEBUG")
     return lg
 
 
@@ -14,13 +14,13 @@ def test_hash_json():
     """Test the hash_json functions."""
     # Test hash_json
     data = {"key": "value"}
-    hash_value = libls.hash_json(data)
+    hash_value = libapparatus.hash_json(data)
     assert isinstance(hash_value, str)
     assert len(hash_value) == 32  # MD5 hash length
 
     # Test with an empty dictionary
     empty_data = {}
-    empty_hash_value = libls.hash_json(empty_data)
+    empty_hash_value = libapparatus.hash_json(empty_data)
     assert isinstance(empty_hash_value, str)
     assert len(empty_hash_value) == 32  # MD5 hash length
 

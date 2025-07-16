@@ -1,4 +1,4 @@
-"""libls/helper.py"""
+"""libapparatus/helper.py"""
 import json
 import hashlib
 import logging

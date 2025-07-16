@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "libls"
+name = "libapparatus"
 version = "0.1.0"
-description = "libray used in the lizardscanner project"
+description = "libray used in the apparatus project"
 authors = ["Konstantin Koslowski <konstantin.koslowski@posteo.de>"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
