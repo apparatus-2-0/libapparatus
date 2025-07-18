@@ -2,7 +2,8 @@
 import json
 import hashlib
 import logging
-
+import os
+import xdg
 
 def hash_json(j):
     """Hash a JSON object using MD5."""
@@ -28,3 +29,18 @@ def get_logger(name, debug=False, time=True):
     if debug:
         logger.setLevel(logging.DEBUG)
     return logger
+
+
+class ADef:
+    """Apparatus Definitions module."""
+    DATA_DIR = f"{xdg.XDG_DATA_HOME}/apparatus"
+    CONFIG_DIR = f"{xdg.XDG_CONFIG_HOME}/apparatus"
+
+    def __init__(self, class_name):
+        """Initialize the Apparatus Definitions configuration."""
+        self.photo_dir = f"{self.DATA_DIR}/{class_name}/photos"
+        if not os.path.isdir(self.photo_dir):
+            os.makedirs(self.photo_dir)
+        self.config_dir = self.CONFIG_DIR
+        if not os.path.isdir(self.photo_dir):
+            os.makedirs(self.photo_dir)

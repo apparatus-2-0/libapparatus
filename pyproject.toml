@@ -6,6 +6,7 @@ authors = ["Konstantin Koslowski <konstantin.koslowski@posteo.de>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+xdg = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
