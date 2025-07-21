@@ -34,6 +34,40 @@ class JSONRPC2:
     GET_MOTOR_POSITION = 34
     SET_MOTOR_POSITION = 35
 
+    @staticmethod
+    def check_request(message):
+        """
+        Validates a JSON-RPC request message.
+        :param message: The JSON-RPC message to validate.
+        :param method: Optional method name to check against the request.
+        :return: True if valid, False otherwise.
+        """
+        if not isinstance(message, dict):
+            return False
+        if message.get("jsonrpc") != JSONRPC2.JSONRPC_VERSION:
+            return False
+        if "method" not in message or not isinstance(message["method"], str):
+            return False
+        if "id" not in message or not isinstance(message["id"], (int, str)):
+            return False
+        return True
+
+    @staticmethod
+    def check_response(message):
+        """
+        Validates a JSON-RPC response message.
+        :param message: The JSON-RPC message to validate.
+        :return: True if valid, False otherwise.
+        """
+        if not isinstance(message, dict):
+            return False
+        if message.get("jsonrpc") != JSONRPC2.JSONRPC_VERSION:
+            return False
+        if "result" not in message and "error" not in message:
+            return False
+        if "id" not in message or not isinstance(message["id"], (int, str)):
+            return False
+        return True
 
     @staticmethod
     def make_request(method, params=None, id=None):
