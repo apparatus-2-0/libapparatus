@@ -38,8 +38,12 @@ class JSONRPC2:
     def check_request(message):
         """
         Validates a JSON-RPC request message.
+        Requests have the following fields:
+         - jsonrpc: Must be set to "2.0".
+         - method:  Must be a string representing the method to invoke.
+         - id:      Must be a unique identifier (int or str) for the request.
+         - params:  Optional, this can be a dictionary or a list.
         :param message: The JSON-RPC message to validate.
-        :param method: Optional method name to check against the request.
         :return: True if valid, False otherwise.
         """
         if not isinstance(message, dict):
@@ -56,6 +60,11 @@ class JSONRPC2:
     def check_response(message):
         """
         Validates a JSON-RPC response message.
+        Responses have the following fields:
+            - jsonrpc: Must be set to "2.0".
+            - result:  Must be present if the request was successful.
+            - error:   Must be present if the request failed.
+            - id:      Must be a unique identifier (int or str) matching the request.
         :param message: The JSON-RPC message to validate.
         :return: True if valid, False otherwise.
         """
@@ -68,6 +77,47 @@ class JSONRPC2:
         if "id" not in message or not isinstance(message["id"], (int, str)):
             return False
         return True
+
+    @staticmethod
+    def check_notification(message):
+        """
+        Validates a JSON-RPC notification message.
+        Notifications have the following fields:
+            - jsonrpc: Must be set to "2.0".
+            - method:  Must be a string representing the method to invoke.
+        They do not have id or params fields.
+        :param message: The JSON-RPC message to validate.
+        :return: True if valid, False otherwise.
+        """
+        if not isinstance(message, dict):
+            return False
+        if message.get("jsonrpc") != JSONRPC2.JSONRPC_VERSION:
+            return False
+        if "method" not in message or not isinstance(message["method"], str):
+            return False
+        if "id" in message:
+            return False
+        if "params" in message and not isinstance(message["params"], (dict, list)):
+            return False
+        return True
+
+    @staticmethod
+    def check_message(message):
+        """
+        Validates a JSON-RPC message, which can be a request, response, or notification.
+        :param message: The JSON-RPC message to validate.
+        :return: True if valid, False otherwise.
+        """
+        if not isinstance(message, dict):
+            return False
+        if "jsonrpc" not in message or message["jsonrpc"] != JSONRPC2.JSONRPC_VERSION:
+            return False
+        if "method" in message:
+            return JSONRPC2.check_request(message)
+        elif "result" in message or "error" in message:
+            return JSONRPC2.check_response(message)
+        else:
+            return JSONRPC2.check_notification(message)
 
     @staticmethod
     def make_request(method, params=None, id=None):
