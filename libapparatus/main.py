@@ -1,4 +1,4 @@
-"""libapparatus/helper.py"""
+"""libapparatus/main.py"""
 import json
 import hashlib
 import logging
@@ -11,6 +11,14 @@ def hash_json(j):
     j_hash = hashlib.md5(j_enc).hexdigest()
     return j_hash
 
+def get_free_storage_percent(path="/"):
+    """Get the free storage space in percent for the given path."""
+    if not os.path.exists(path):
+        raise ValueError(f"Path {path} does not exist.")
+    statvfs = os.statvfs(path)
+    free_space = statvfs.f_frsize * statvfs.f_bavail
+    total_space = statvfs.f_frsize * statvfs.f_blocks
+    return f"{(free_space / total_space) * 100:03.2f}"
 
 def get_logger(name, debug=False, time=True):
     """Get a logger with the specified name and debug level."""
