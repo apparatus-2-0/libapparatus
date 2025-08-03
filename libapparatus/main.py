@@ -1,9 +1,11 @@
 """libapparatus/main.py"""
+
 import json
 import hashlib
 import logging
 import os
 import xdg
+
 
 def hash_json(j):
     """Hash a JSON object using MD5."""
@@ -11,7 +13,8 @@ def hash_json(j):
     j_hash = hashlib.md5(j_enc).hexdigest()
     return j_hash
 
-def get_free_storage_percent(path="/"):
+
+def get_free_storage(path="/"):
     """Get the free storage space in percent for the given path."""
     if not os.path.exists(path):
         raise ValueError(f"Path {path} does not exist.")
@@ -19,6 +22,7 @@ def get_free_storage_percent(path="/"):
     free_space = statvfs.f_frsize * statvfs.f_bavail
     total_space = statvfs.f_frsize * statvfs.f_blocks
     return f"{(free_space / total_space) * 100:03.2f}"
+
 
 def get_logger(name, debug=False, time=True):
     """Get a logger with the specified name and debug level."""
@@ -41,6 +45,7 @@ def get_logger(name, debug=False, time=True):
 
 class ADef:
     """Apparatus Definitions module."""
+
     DATA_DIR = f"{xdg.XDG_DATA_HOME}/apparatus"
     CONFIG_DIR = f"{xdg.XDG_CONFIG_HOME}/apparatus"
 

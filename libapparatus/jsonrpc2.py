@@ -11,10 +11,11 @@ class JSONRPC2:
     JSONRPC_VERSION = "2.0"
     # General methods for registration and status
     REGISTER = 1
-    REGISTERED = 2
-    UNREGISTER = 3
-    PING = 4
-    GET_STATUS = 6
+    UNREGISTER = 2
+    PING = 3
+    GET_STATUS = 5
+    GET_NODE_STATUS = 6
+    GET_USER_STATUS = 7
     # Configuration methods
     GET_CONFIG = 10
     SET_CONFIG = 11
@@ -155,6 +156,22 @@ class JSONRPC2:
         return req
 
     @staticmethod
+    def make_notification(method, params=None):
+        """
+        Constructs a JSON-RPC request object.
+        :param method: The method name to invoke.
+        :param params: Optional parameters for the method.
+        :return: Dictionary representing the JSON-RPC request.
+        """
+        req = {
+            "jsonrpc": JSONRPC2.JSONRPC_VERSION,
+            "method": method
+        }
+        if params is not None:
+            req["params"] = params
+        return req
+
+    @staticmethod
     def make_response(id, result=None):
         """
         Constructs a JSON-RPC response object.
@@ -198,7 +215,10 @@ class JSONRPC2:
         :return: Parsed dictionary, or None if parsing fails.
         """
         try:
-            message = msg if isinstance(msg, dict) else json.loads(msg.strip())
+            if isinstance(msg, str):
+                message = json.loads(msg.strip())
+            elif isinstance(msg, dict):
+                message = msg
         except Exception as ex:
             print(f"Error parsing JSON-RPC message: {ex}")
             return None

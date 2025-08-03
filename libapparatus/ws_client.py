@@ -6,7 +6,9 @@ import libapparatus
 
 
 class WSClient:
-    def __init__(self, host="localhost", port=8100, topic=None, message_handler=None, on_connect=None, reconnect_delay=3, debug=False):
+    def __init__(
+        self, host="localhost", port=8100, topic=None, message_handler=None, on_connect=None, reconnect_delay=3, debug=False
+    ):
         self.uri = f"ws://{host}:{port}/websocket"
         self.name = f"WSClient:{topic}" if topic else "WSClient"
         self.ws = None
@@ -69,7 +71,6 @@ class WSClient:
             self.logger.warning("Websocket not connected, waiting to send message...")
             self.reconnect()
             await asyncio.sleep(self.reconnect_delay)
-        self.logger.debug(f"> {json.dumps(message)}")
         await self.ws.send(json.dumps(message))
 
     async def listen(self):
