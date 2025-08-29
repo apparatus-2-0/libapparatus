@@ -32,8 +32,8 @@ class JSONRPC2:
     GET_MOTOR_STATUS = 31
     GET_MOTOR_CONFIG = 32
     SET_MOTOR_CONFIG = 33
-    GET_MOTOR_POSITION = 34
-    SET_MOTOR_POSITION = 35
+    START_MOTOR = 34
+    STOP_MOTOR = 35
 
     TYPE_REQUEST = "REQUEST"
     TYPE_RESPONSE = "RESPONSE"
@@ -138,21 +138,19 @@ class JSONRPC2:
             return JSONRPC2.TYPE_NOTIFICATION
 
     @staticmethod
-    def make_request(method, id, params=None):
+    def make_request(method, id=None, params=None):
         """
         Constructs a JSON-RPC request object.
         :param method: The method name to invoke.
-        :param id: Identifier for the request.
         :param params: Optional parameters for the method.
         :return: Dictionary representing the JSON-RPC request.
         """
         req = {
             "jsonrpc": JSONRPC2.JSONRPC_VERSION,
             "method": method,
-            "id": id
+            "id": id if id is not None else getattr(JSONRPC2, method),
+            "params": params if params is not None else {}
         }
-        if params is not None:
-            req["params"] = params
         return req
 
     @staticmethod

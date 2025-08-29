@@ -69,19 +69,24 @@ class WSClient:
             if self._stop:
                 return
             self.logger.warning("Websocket not connected, waiting to send message...")
-            self.reconnect()
+            await self.reconnect()
             await asyncio.sleep(self.reconnect_delay)
         await self.ws.send(json.dumps(message))
 
     async def listen(self):
+        """Listen for messages from the websocket."""
         try:
             async for message in self.ws:
                 if self.message_handler:
-                    await self.message_handler(message)
-        except websockets.ConnectionClosed:
-            pass  # Connection lost, will reconnect in connect()
+                    if asyncio.iscoroutinefunction(self.message_handler):
+                        await self.message_handler(message)
+                    else:
+                        self.message_handler(message)
+        except websockets.exceptions.ConnectionClosed:
+            self.logger.warning("Websocket connection closed")
+            # Don't call reconnect here, let the connect() loop handle it
         except Exception as e:
-            self.logger.error(f"Websocket listen error: {e}")
+            self.logger.error(f"Error in listen: {e}")
 
     async def close(self):
         self._stop = True
