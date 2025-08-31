@@ -22,7 +22,7 @@ class WSClient:
     async def connect(self):
         while not self._stop:
             try:
-                self.ws = await websockets.connect(self.uri)
+                self.ws = await websockets.connect(self.uri, max_size=None)
                 if self.ws.state == websockets.protocol.State.OPEN:
                     self.logger.info(f"Connected to {self.uri}")
                     if self.on_connect:
